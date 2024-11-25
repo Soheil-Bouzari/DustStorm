@@ -1,0 +1,39 @@
+import pandas as pd
+import glob
+
+# Specify the path where your CSV files are located
+csv_files_path = '/mnt/c/DevNet/Dust_Storm_Data/*.csv'
+
+# Specify the output file path for the combined rows
+output_file_path = '/mnt/c/DevNet/Dust_Storm_Data/combined_rows.csv'
+
+# List to store DataFrames from each CSV file
+dfs = []
+
+# Columns with mixed data types
+mixed_dtype_columns = [26, 28, 29, 34, 35, 37, 48]
+
+# Iterate through each CSV file
+for file in glob.glob(csv_files_path):
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv(file, dtype={col: str for col in mixed_dtype_columns})
+    
+    # Filter rows where EVENT_TYPE is "Dust Storm"
+    dust_storm_rows = df[df['EVENT_TYPE'] == 'Dust Storm']
+    
+    # Check if there are rows to concatenate
+    if not dust_storm_rows.empty:
+        # Append the filtered rows to the list
+        dfs.append(dust_storm_rows)
+
+# Check if there are any DataFrames to concatenate
+if dfs:
+    # Combine all DataFrames into one
+    combined_df = pd.concat(dfs, ignore_index=True)
+
+    # Write the combined DataFrame to a new CSV file
+    combined_df.to_csv(output_file_path, index=False)
+
+    print(f"Combined rows with 'Dust Storm' event type saved to: {output_file_path}")
+else:
+    print("No rows with 'Dust Storm' event type found in any CSV files.")
