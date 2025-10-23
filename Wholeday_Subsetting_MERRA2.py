@@ -45,18 +45,18 @@ def get_http_data(request):
 
 product = 'M2T1NXFLX_V5.12.4' 
 varNames =['SPEED', 'SPEEDMAX', 'TLML', 'QLML', 'QSH', 'HLML']
-minlon = -112.2391
-maxlon = -111.6131
-minlat = 33.2442
-maxlat = 33.7442
-begTime = '2023-09-01T00:00:00Z'
-endTime = '2023-09-01T23:30:00Z'
-begHour = '20:30'
-endHour = '20:30'
+minlon = -111.8078971
+maxlon = -111.1828971
+minlat = 32.466176
+maxlat = 32.966176
+begTime = '1997-08-02'
+endTime = '1997-08-02'
+#begHour = '19:30'
+#endHour = '19:30'
 
 
 # Disabling diurnalAggregation to see if we receive hourly value per day
-#diurnalAggregation = '1'
+# diurnalAggregation = '1'
 interp = 'remapbil'
 destGrid = 'cfsr0.5a'
 
@@ -71,11 +71,9 @@ subset_request = {
         'role'  : 'subset',
         'start' : begTime,
         'end'   : endTime,
-        'diurnalFrom' : begHour,
-        'diurnalTo' : endHour,
-        "diurnalAggregation": "none",
         'box'   : [minlon, minlat, maxlon, maxlat],
         'crop'  : True,
+        #'diurnalAggregation': diurnalAggregation,
         'mapping': interp,
         'grid'  : destGrid,
         'data': [{'datasetId': product,

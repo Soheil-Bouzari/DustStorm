@@ -29,17 +29,17 @@ def add_patterns(matcher):
         [{"LOWER": "near"}, {"ENT_TYPE": "GPE"}]  # "near" followed by place
     ]
 
-    # New Directional Distance Patterns: "X miles southwest of Y"
-    directional_patterns = [
-        [{"IS_DIGIT": True}, {"LOWER": {"IN": ["miles"]}}, {"LOWER": {"IN": ["southwest", "southeast", "northwest", "northeast"]}}, 
-         {"LOWER": "of"}, {"ENT_TYPE": "GPE"}]
-    ]
-
     # Add modular patterns to matcher
     matcher.add("HighwayPatterns", highway_patterns)
     matcher.add("DistancePatterns", distance_patterns)
     matcher.add("NearPatterns", near_patterns)
-    matcher.add("DirectionalDistancePatterns", directional_patterns)  # Add new directional patterns
+
+    # Add more patterns safely as needed (incremental approach)
+    additional_patterns = [
+        # Example: Adding patterns incrementally as needed
+        [{"LOWER": "junction"}, {"LOWER": "at"}, {"ENT_TYPE": "GPE"}],  # Example: "junction at"
+    ]
+    matcher.add("AdditionalPatterns", additional_patterns)
 
 # Call function to add patterns to matcher
 add_patterns(matcher)
@@ -61,7 +61,7 @@ def parse_location(narrative, state):
             locations.append(ent.text)
             print(f"Detected GPE: {ent.text}")  # Logging detected location
 
-    # Add regex-based highway, distance, and directional distance matches
+    # Add regex-based highway and distance matches
     for match_id, start, end in matches:
         span = doc[start:end].text
         detailed_location.append(span)
@@ -113,7 +113,7 @@ for index, row in df_input.iterrows():
     df_input.at[index, 'Extracted_Location'] = parsed_location
 
 # Save the output with the extracted locations
-output_file = "combined_rows_final_output-9-30-2024.csv"
+output_file = "combined_rows_final_output.csv"
 df_input.to_csv(output_file, index=False)
 
 print(f"Location parsing complete. Results saved to {output_file}.")
